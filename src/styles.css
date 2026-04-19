@@ -151,6 +151,188 @@ body { margin: 0; }
 }
 .card-value { font-size: 28px; font-weight: 600; }
 
+/* ── Vessel search ────────────────────────────────────────────────────── */
+
+.vessel-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 24px 0 20px;
+  max-width: 900px;
+}
+
+.vessel-search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.vessel-search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(11, 79, 143, 0.1);
+}
+
+.vessel-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  background: transparent;
+  color: var(--text);
+  padding: 10px 0;
+}
+
+.vessel-search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.vessel-search-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.vessel-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 32px 0;
+}
+
+/* ── Fleet sections ───────────────────────────────────────────────────── */
+
+.fleet-section {
+  margin-bottom: 28px;
+  max-width: 900px;
+}
+
+.fleet-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.fleet-section-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.fleet-section-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── Vessel cards ─────────────────────────────────────────────────────── */
+
+.vessel-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.vessel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  transition: box-shadow 0.15s;
+}
+
+.vessel-card:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.vessel-card.offline {
+  opacity: 0.6;
+}
+
+.vessel-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.vessel-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.vessel-alert-badge {
+  background: #e53e3e;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  flex-shrink: 0;
+}
+
+.vessel-card-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.vessel-card-type {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.vessel-card-imo {
+  font-size: 11px;
+  color: var(--tab-disabled);
+}
+
+.vessel-card-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 10px;
+}
+
+.vessel-card-icons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.vessel-icon-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.vessel-icon-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Activity ─────────────────────────────────────────────────────────── */
+
 .activity {
   margin-top: 32px;
   max-width: 900px;
@@ -453,6 +635,22 @@ body { margin: 0; }
   border-left: 3px solid #e0c830;
 }
 
+/* Organisational section: subtle blue left-border accent */
+.org-section {
+  border-left: 3px solid #8ab4dc;
+}
+
+/* Blue-tinted inputs for org step (non-optional fields only) */
+.form-input.org-input {
+  background: #eef4fb;
+  border-color: #8ab4dc;
+}
+
+.form-input.org-input:focus {
+  border-color: #2d6fa8;
+  box-shadow: 0 0 0 2px rgba(45, 111, 168, 0.15);
+}
+
 /* Info box */
 .legal-info-box {
   background: #fffef5;
@@ -579,7 +777,7 @@ body { margin: 0; }
   font-size: 14px;
   font-family: inherit;
   color: var(--text);
-  background: var(--bg);
+  background: #ffffff;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -854,6 +1052,13 @@ body { margin: 0; }
   background: #dce8f5;
   color: #0e3460;
   border-color: #8ab4dc;
+}
+
+/* Optional badge — white */
+.field-why-badge.optional {
+  background: #ffffff;
+  color: var(--text-muted);
+  border-color: var(--border);
 }
 
 /* ── Fleet / vessel selector ──────────────────────────────────────────── */

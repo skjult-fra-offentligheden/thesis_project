@@ -41,7 +41,7 @@ const LICENCE_TOOLTIPS: Record<string, string> = {
   'lic-primeserv':
     'PrimeServ is Everllence’s core product, providing access to vessel data, dashboards, and alerts. All users must have this licence.',
   'lic-ai-service':
-    'AI sercice provides access to AI-powered insights and recommendations. Describe the specific features or data this licence enables for the user.',
+    'AI service provides access to AI-powered insights and recommendations. Describe the specific features or data this licence enables for the user.',
   'lic-extended-data-monitoring':
     'Extended data monitoring allows access to additional data sources and more frequent updates. such as real-time sensor data, historical archives, or third-party integrations.',
   'lic-spare-part-shop':
@@ -314,10 +314,10 @@ function Step1({
             <div className="form-field full">
               <div className="form-label-row">
                 <label className="form-label">Address</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.address}>Optional</span>
+                <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.address}>Optional</span>
               </div>
               <input
-                className="form-input legal-input"
+                className="form-input"
                 value={form.address}
                 onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
                 placeholder="e.g. Strandvejen 100"
@@ -326,10 +326,10 @@ function Step1({
             <div className="form-field">
               <div className="form-label-row">
                 <label className="form-label">Postal code</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.postalCode}>Optional</span>
+                <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.postalCode}>Optional</span>
               </div>
               <input
-                className="form-input legal-input"
+                className="form-input"
                 value={form.postalCode}
                 onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
                 placeholder="e.g. 2900"
@@ -383,7 +383,7 @@ function Step1({
 
         <div className="wizard-actions">
           <button className="btn btn-primary" onClick={onNext} disabled={!valid}>
-            Continue to org. requirements →
+            Continue to access and licenses →
           </button>
         </div>
       </div>
@@ -468,7 +468,7 @@ function Step2({
       </div>
 
       {/* Email */}
-      <div className="wizard-section">
+      <div className="wizard-section org-section">
         <p className="wizard-section-title">Contact</p>
         <p className="wizard-section-desc">
           Used to send the account invitation and for platform login.
@@ -480,7 +480,7 @@ function Step2({
               <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.email}>Account setup</span>
             </div>
             <input
-              className="form-input"
+              className="form-input org-input"
               type="email"
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
@@ -490,7 +490,7 @@ function Step2({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Phone number</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.phone}>Optional</span>
+              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.phone}>Optional</span>
             </div>
             <input
               className="form-input"
@@ -504,7 +504,7 @@ function Step2({
       </div>
 
       {/* User details */}
-      <div className="wizard-section">
+      <div className="wizard-section org-section">
         <p className="wizard-section-title">User details</p>
         <p className="wizard-section-desc">
           Department and role determine which licences and access scopes apply to this user.
@@ -516,7 +516,7 @@ function Step2({
               <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.department}>Org. setup</span>
             </div>
             <input
-              className="form-input"
+              className="form-input org-input"
               value={form.department}
               onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
               placeholder="e.g. Engineering"
@@ -528,7 +528,7 @@ function Step2({
               <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.employeeRole}>Org. setup</span>
             </div>
             <input
-              className="form-input"
+              className="form-input org-input"
               value={form.employeeRole}
               onChange={(e) => setForm((f) => ({ ...f, employeeRole: e.target.value }))}
               placeholder="e.g. Marine Engineer"
@@ -537,7 +537,7 @@ function Step2({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Account expiry</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.expiryDate}>Optional</span>
+              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.expiryDate}>Optional</span>
             </div>
             <input
               className="form-input"
@@ -550,7 +550,7 @@ function Step2({
       </div>
 
       {/* Product licences */}
-      <div className="wizard-section">
+      <div className="wizard-section org-section">
         <p className="wizard-section-title">Product licences</p>
         <p className="wizard-section-desc">
           Select the standalone Everllence products this user should have access
@@ -569,7 +569,7 @@ function Step2({
       </div>
 
       {/* Fleet / vessel assignment */}
-      <div className="wizard-section">
+      <div className="wizard-section org-section">
         <p className="wizard-section-title">Fleet & vessel access</p>
         <p className="wizard-section-desc">
           Assign the user to whole fleets or individual vessels. They will only
