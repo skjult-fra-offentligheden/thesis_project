@@ -80,6 +80,12 @@ interface FormState {
 
 export function CreateUser() {
   const [step, setStep] = useState<WizardStep>(1);
+  const defaultExpiry = (() => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().split('T')[0];
+  })();
+
   const [form, setForm] = useState<FormState>({
     firstName: '',
     lastName: '',
@@ -91,7 +97,7 @@ export function CreateUser() {
     location: '',
     department: '',
     employeeRole: '',
-    expiryDate: '',
+    expiryDate: defaultExpiry,
     email: '',
     phone: '',
     selectedLicenceIds: ['lic-primeserv'],
@@ -141,6 +147,11 @@ export function CreateUser() {
   }
 
   function resetWizard() {
+    const freshExpiry = (() => {
+      const d = new Date();
+      d.setFullYear(d.getFullYear() + 1);
+      return d.toISOString().split('T')[0];
+    })();
     setForm({
       firstName: '',
       lastName: '',
@@ -152,7 +163,7 @@ export function CreateUser() {
       location: '',
       department: '',
       employeeRole: '',
-      expiryDate: '',
+      expiryDate: freshExpiry,
       email: '',
       phone: '',
       selectedLicenceIds: ['lic-primeserv'],
@@ -284,7 +295,7 @@ function Step1({
                 className="form-input legal-input"
                 value={form.firstName}
                 onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-                placeholder="e.g. Jan"
+                placeholder="e.g. Jon"
               />
             </div>
             <div className="form-field">
@@ -296,7 +307,7 @@ function Step1({
                 className="form-input legal-input"
                 value={form.lastName}
                 onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-                placeholder="e.g. Kowalski"
+                placeholder="e.g. Doe"
               />
             </div>
             <div className="form-field full">
@@ -484,7 +495,7 @@ function Step2({
               type="email"
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              placeholder="e.g. jan.kowalski@company.com"
+              placeholder="e.g. jon.doe@company.com"
             />
           </div>
           <div className="form-field full">
@@ -692,11 +703,14 @@ function Step3({
           </div>
           {selectedLicences.length > 0 && (
             <div className="user-summary-grants" style={{ marginTop: 8 }}>
-              {selectedLicences.map((l) => (
-                <span key={l.id} className="summary-grant-pill organisational">
-                  {l.label}
-                </span>
-              ))}
+              {selectedLicences.map((l) => {
+                const pillColour = l.id === 'lic-primeserv' ? 'organisational' : l.provenance.kind;
+                return (
+                  <span key={l.id} className={`summary-grant-pill ${pillColour}`}>
+                    {l.label}
+                  </span>
+                );
+              })}
             </div>
           )}
           {assignedVessels.length > 0 && (

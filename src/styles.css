@@ -787,6 +787,10 @@ body { margin: 0; }
   box-shadow: 0 0 0 2px rgba(11, 79, 143, 0.1);
 }
 
+.form-input::placeholder {
+  color: #c2c8d0;
+}
+
 /* Yellow-tinted inputs for legal step */
 .form-input.legal-input {
   background: #fdfbee;
@@ -856,42 +860,56 @@ body { margin: 0; }
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-/* Legal: matte light yellow */
+/* Legal: unselected = pale wash, selected = full yellow */
 .grant-badge.legal {
-  background: #faf5d3;
-  border-color: #e8d55a;
+  background: #fdfcf3;
+  border-color: #e8e0a0;
 }
 
 .grant-badge.legal:hover {
-  border-color: #c8a800;
+  border-color: #d4c050;
+  background: #faf6dc;
 }
 
 .grant-badge.legal.selected {
+  background: #faf5d3;
   border-color: #b89600;
   box-shadow: 0 0 0 2px rgba(184, 150, 0, 0.18);
 }
 
 .grant-badge.legal .grant-badge-type-tag {
+  background: #e8e0a0;
+  color: #5a4200;
+}
+
+.grant-badge.legal.selected .grant-badge-type-tag {
   background: #e8d55a;
   color: #5a4200;
 }
 
-/* Organisational: matte blue */
+/* Organisational: unselected = pale wash, selected = full blue */
 .grant-badge.organisational {
-  background: #dce8f5;
-  border-color: #8ab4dc;
+  background: #f4f8fd;
+  border-color: #bdd4ea;
 }
 
 .grant-badge.organisational:hover {
-  border-color: #2d6fa8;
+  border-color: #6a9fc8;
+  background: #e8f0f8;
 }
 
 .grant-badge.organisational.selected {
+  background: #dce8f5;
   border-color: #1a5a9a;
   box-shadow: 0 0 0 2px rgba(26, 90, 154, 0.15);
 }
 
 .grant-badge.organisational .grant-badge-type-tag {
+  background: #bdd4ea;
+  color: #1a3a60;
+}
+
+.grant-badge.organisational.selected .grant-badge-type-tag {
   background: #8ab4dc;
   color: #0e3460;
 }
