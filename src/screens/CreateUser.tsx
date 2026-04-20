@@ -27,13 +27,13 @@ const FIELD_TOOLTIPS = {
   expiryDate:
     'Without expiry date, the account will remain active for 1 year by default. Setting an expiry date can help ensure access is reviewed periodically.',
   address:
-    'Placeholder — describe why the user\'s address is collected, e.g. for identity verification or legal correspondence.',
+    'Address is used alongside postal code for identity verification and export control screening.',
   postalCode:
-    'Placeholder — postal code is used alongside address for identity verification and export control screening.',
+    'Postal code is used to know in which city the address exists.',
   accountCountry:
-    'Placeholder — the country where the account holder is based, used to determine applicable regulatory requirements.',
+    'Account country is used to determine the regulatory scope for sanctions and export control screening.',
   phone:
-    'Optional — phone number can be used for account recovery or support contact purposes.',
+    'Optional: phone number can be used for account recovery or support contact purposes.',
 };
 
 // Licence badges (Step 2 — organisational requirements)
