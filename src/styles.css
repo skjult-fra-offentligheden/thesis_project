@@ -673,6 +673,9 @@ body { margin: 0; }
 .step1-info {
   width: 280px;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
 }
 
 /* ── Requirements group labels ────────────────────────────────────────── */
@@ -744,8 +747,6 @@ body { margin: 0; }
   border: 1px solid #e8d55a;
   border-radius: 8px;
   overflow: hidden;
-  position: sticky;
-  top: 0;
 }
 
 /* Blue org info box — sits below the yellow box */
