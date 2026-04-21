@@ -103,6 +103,50 @@ body { margin: 0; }
   flex: 1;
 }
 
+.nav-ab-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.nav-ab-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.nav-ab-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.nav-ab-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.nav-ab-btn:hover:not(.active) {
+  background: var(--tab-hover);
+}
+
+.nav-ab-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
 .nav-logout {
   display: flex;
   align-items: center;

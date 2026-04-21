@@ -4,6 +4,7 @@ import { fleets } from '../data/fleets';
 import { customerOrg } from '../data/users';
 import type { Fleet } from '../data/fleets';
 import type { FunctionGrant } from '../types/grants';
+import type { ABVariant } from '../App';
 
 // ── Edit all badge tooltip text here ─────────────────────────────────────
 const FIELD_TOOLTIPS = {
@@ -81,7 +82,7 @@ function makeDefaultExpiry() {
   return d.toISOString().split('T')[0];
 }
 
-export function CreateUser() {
+export function CreateUser({ abVariant }: { abVariant: ABVariant }) {
   const [step, setStep] = useState<WizardStep>(1);
   const [form, setForm] = useState<FormState>({
     firstName: '',
@@ -201,6 +202,7 @@ export function CreateUser() {
             toggleFleet={toggleFleet}
             onNext={runSanctionsCheck}
             valid={formValid}
+            abVariant={abVariant}
           />
         )}
         {step === 2 && (
@@ -252,6 +254,7 @@ function StepForm({
   toggleFleet,
   onNext,
   valid,
+  abVariant,
 }: {
   form: FormState;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
@@ -261,7 +264,10 @@ function StepForm({
   toggleFleet: (fleet: Fleet) => void;
   onNext: () => void;
   valid: boolean;
+  abVariant: ABVariant;
 }) {
+  const lbl = (yellowText: string) => abVariant === 'b' ? 'Legal requirement' : yellowText;
+  const org = (blueText: string)   => abVariant === 'b' ? 'Everllence requirement' : blueText;
   return (
     <>
       {/* Account type — readonly */}
@@ -286,7 +292,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">First name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.firstName}>Sanctions screening</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.firstName}>{lbl('Sanctions screening')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -298,7 +304,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Last name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.lastName}>Sanctions screening</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.lastName}>{lbl('Sanctions screening')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -310,7 +316,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Date of birth</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.dateOfBirth}>Sanctions list match</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.dateOfBirth}>{lbl('Sanctions list match')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -346,7 +352,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Account country</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.accountCountry}>Regulatory scope</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.accountCountry}>{lbl('Regulatory scope')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -358,7 +364,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Email</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.email}>Account setup</span>
+              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.email}>{org('Account setup')}</span>
             </div>
             <input
               className="form-input org-input"
@@ -391,7 +397,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Company name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.company}>Export control check</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.company}>{lbl('Export control check')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -403,7 +409,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Location / country</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.location}>Export control check</span>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.location}>{lbl('Export control check')}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -415,7 +421,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Department</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.department}>Org. setup</span>
+              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.department}>{org('Org. setup')}</span>
             </div>
             <input
               className="form-input org-input"
@@ -427,7 +433,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Employee role</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.employeeRole}>Org. setup</span>
+              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.employeeRole}>{org('Org. setup')}</span>
             </div>
             <input
               className="form-input org-input"
