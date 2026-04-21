@@ -422,10 +422,11 @@ body { margin: 0; }
 
 .wizard-section {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid #c4c9d1;
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .wizard-section-title {
@@ -791,15 +792,15 @@ body { margin: 0; }
   color: #c2c8d0;
 }
 
-/* Yellow-tinted inputs for legal step */
+/* Legal inputs: white — the yellow tag carries the encoding signal */
 .form-input.legal-input {
-  background: #fdfbee;
-  border-color: #e0cc60;
+  background: #ffffff;
+  border-color: var(--border);
 }
 
 .form-input.legal-input:focus {
-  border-color: #b89600;
-  box-shadow: 0 0 0 2px rgba(184, 150, 0, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(11, 79, 143, 0.1);
 }
 
 /* ── Role selector ────────────────────────────────────────────────────── */
