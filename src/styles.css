@@ -631,6 +631,48 @@ body { margin: 0; }
   flex-shrink: 0;
 }
 
+/* ── Requirements group labels ────────────────────────────────────────── */
+
+.requirements-group-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 20px 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.requirements-group-label:first-of-type {
+  margin-top: 0;
+}
+
+.requirements-group-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legal-group-label {
+  color: #7a5c00;
+}
+
+.legal-dot {
+  background: #e0c830;
+}
+
+.org-group-label {
+  color: #1a3a60;
+}
+
+.org-dot {
+  background: #8ab4dc;
+}
+
 /* Legal section: subtle yellow left-border accent */
 .legal-section {
   border-left: 3px solid #e0c830;
@@ -641,15 +683,15 @@ body { margin: 0; }
   border-left: 3px solid #8ab4dc;
 }
 
-/* Blue-tinted inputs for org step (non-optional fields only) */
+/* Org inputs: white — the blue tag carries the encoding signal */
 .form-input.org-input {
-  background: #eef4fb;
-  border-color: #8ab4dc;
+  background: #ffffff;
+  border-color: var(--border);
 }
 
 .form-input.org-input:focus {
-  border-color: #2d6fa8;
-  box-shadow: 0 0 0 2px rgba(45, 111, 168, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(11, 79, 143, 0.1);
 }
 
 /* Info box */
@@ -660,6 +702,53 @@ body { margin: 0; }
   overflow: hidden;
   position: sticky;
   top: 0;
+}
+
+/* Blue org info box — sits below the yellow box */
+.org-info-box {
+  background: #f5f9fd;
+  border: 1px solid #8ab4dc;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.org-info-header {
+  background: #dce8f5;
+  border-bottom: 1px solid #8ab4dc;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0e3460;
+}
+
+.org-info-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #8ab4dc;
+  color: #0e3460;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-style: normal;
+}
+
+.org-info-body {
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.org-info-body p {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .legal-info-header {

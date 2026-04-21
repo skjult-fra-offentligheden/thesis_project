@@ -6,7 +6,6 @@ import type { Fleet } from '../data/fleets';
 import type { FunctionGrant } from '../types/grants';
 
 // ── Edit all badge tooltip text here ─────────────────────────────────────
-// Field badges (Step 1 — legal requirements)
 const FIELD_TOOLTIPS = {
   firstName:
     'Your full name is matched against official EU, UN and OFAC sanctions lists to verify that platform access can be granted.',
@@ -36,10 +35,9 @@ const FIELD_TOOLTIPS = {
     'Optional: phone number can be used for account recovery or support contact purposes.',
 };
 
-// Licence badges (Step 2 — organisational requirements)
 const LICENCE_TOOLTIPS: Record<string, string> = {
   'lic-primeserv':
-    'PrimeServ is Everllence’s core product, providing access to vessel data, dashboards, and alerts. All users must have this licence.',
+    'PrimeServ is Everllence\u2019s core product, providing access to vessel data, dashboards, and alerts. All users must have this licence.',
   'lic-ai-service':
     'AI service provides access to AI-powered insights and recommendations. Describe the specific features or data this licence enables for the user.',
   'lic-extended-data-monitoring':
@@ -56,7 +54,7 @@ const LICENCE_TOOLTIPS: Record<string, string> = {
 // To demo the failed sanctions screen, use first name "Viktor" + last name "Petrov"
 const SANCTIONS_FAIL_TRIGGER = { firstName: 'Viktor', lastName: 'Petrov' };
 
-type WizardStep = 1 | 2 | 3;
+type WizardStep = 1 | 2;
 type SanctionsStatus = 'checking' | 'passed' | 'failed';
 
 interface FormState {
@@ -71,21 +69,20 @@ interface FormState {
   department: string;
   employeeRole: string;
   expiryDate: string;
-  // Organisational
   email: string;
   phone: string;
   selectedLicenceIds: string[];
   assignedVesselIds: string[];
 }
 
+function makeDefaultExpiry() {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().split('T')[0];
+}
+
 export function CreateUser() {
   const [step, setStep] = useState<WizardStep>(1);
-  const defaultExpiry = (() => {
-    const d = new Date();
-    d.setFullYear(d.getFullYear() + 1);
-    return d.toISOString().split('T')[0];
-  })();
-
   const [form, setForm] = useState<FormState>({
     firstName: '',
     lastName: '',
@@ -97,7 +94,7 @@ export function CreateUser() {
     location: '',
     department: '',
     employeeRole: '',
-    expiryDate: defaultExpiry,
+    expiryDate: makeDefaultExpiry(),
     email: '',
     phone: '',
     selectedLicenceIds: ['lic-primeserv'],
@@ -106,7 +103,7 @@ export function CreateUser() {
   const [sanctionsStatus, setSanctionsStatus] = useState<SanctionsStatus>('checking');
 
   function toggleLicence(id: string) {
-    if (id === 'lic-primeserv') return; // always on
+    if (id === 'lic-primeserv') return;
     setForm((prev) => ({
       ...prev,
       selectedLicenceIds: prev.selectedLicenceIds.includes(id)
@@ -126,9 +123,7 @@ export function CreateUser() {
 
   function toggleFleet(fleet: Fleet) {
     const fleetVesselIds = fleet.vessels.map((v) => v.id);
-    const allSelected = fleetVesselIds.every((id) =>
-      form.assignedVesselIds.includes(id)
-    );
+    const allSelected = fleetVesselIds.every((id) => form.assignedVesselIds.includes(id));
     setForm((prev) => ({
       ...prev,
       assignedVesselIds: allSelected
@@ -137,21 +132,16 @@ export function CreateUser() {
     }));
   }
 
-  function goToStep3() {
+  function runSanctionsCheck() {
     const willFail =
       form.firstName.trim().toLowerCase() === SANCTIONS_FAIL_TRIGGER.firstName.toLowerCase() &&
       form.lastName.trim().toLowerCase() === SANCTIONS_FAIL_TRIGGER.lastName.toLowerCase();
-    setStep(3);
+    setStep(2);
     setSanctionsStatus('checking');
     setTimeout(() => setSanctionsStatus(willFail ? 'failed' : 'passed'), 10000);
   }
 
   function resetWizard() {
-    const freshExpiry = (() => {
-      const d = new Date();
-      d.setFullYear(d.getFullYear() + 1);
-      return d.toISOString().split('T')[0];
-    })();
     setForm({
       firstName: '',
       lastName: '',
@@ -163,7 +153,7 @@ export function CreateUser() {
       location: '',
       department: '',
       employeeRole: '',
-      expiryDate: freshExpiry,
+      expiryDate: makeDefaultExpiry(),
       email: '',
       phone: '',
       selectedLicenceIds: ['lic-primeserv'],
@@ -172,15 +162,13 @@ export function CreateUser() {
     setStep(1);
   }
 
-  const step1Valid =
+  const formValid =
     form.firstName.trim() !== '' &&
     form.lastName.trim() !== '' &&
     form.dateOfBirth.trim() !== '' &&
     form.accountCountry.trim() !== '' &&
     form.company.trim() !== '' &&
-    form.location.trim() !== '';
-
-  const step2Valid =
+    form.location.trim() !== '' &&
     form.email.includes('@') &&
     form.department.trim() !== '' &&
     form.employeeRole.trim() !== '';
@@ -204,33 +192,24 @@ export function CreateUser() {
 
       <div className="wizard-body">
         {step === 1 && (
-          <Step1
-            form={form}
-            setForm={setForm}
-            onNext={() => setStep(2)}
-            valid={step1Valid}
-          />
-        )}
-        {step === 2 && (
-          <Step2
+          <StepForm
             form={form}
             setForm={setForm}
             selectedLicences={selectedLicences}
             toggleLicence={toggleLicence}
             toggleVessel={toggleVessel}
             toggleFleet={toggleFleet}
-            onNext={goToStep3}
-            onBack={() => setStep(1)}
-            valid={step2Valid}
+            onNext={runSanctionsCheck}
+            valid={formValid}
           />
         )}
-        {step === 3 && (
-          <Step3
+        {step === 2 && (
+          <StepFinalCheck
             form={form}
             selectedLicences={selectedLicences}
             assignedVessels={assignedVessels}
             status={sanctionsStatus}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(1)}
             onReset={resetWizard}
           />
         )}
@@ -244,11 +223,9 @@ export function CreateUser() {
 function StepBar({ step }: { step: WizardStep }) {
   return (
     <div className="wizard-steps">
-      <StepDot num={1} label="Identity and screening" step={step} />
+      <StepDot num={1} label="Identity & access" step={step} />
       <div className="wizard-step-connector" />
-      <StepDot num={2} label="Access and licences" step={step} />
-      <div className="wizard-step-connector" />
-      <StepDot num={3} label="Final check." step={step} />
+      <StepDot num={2} label="Final check" step={step} />
     </div>
   );
 }
@@ -264,189 +241,9 @@ function StepDot({ num, label, step }: { num: number; label: string; step: Wizar
   );
 }
 
-/* ── Step 1: Legal requirements ───────────────────────────────────────── */
+/* ── Combined form step ───────────────────────────────────────────────── */
 
-function Step1({
-  form,
-  setForm,
-  onNext,
-  valid,
-}: {
-  form: FormState;
-  setForm: React.Dispatch<React.SetStateAction<FormState>>;
-  onNext: () => void;
-  valid: boolean;
-}) {
-  return (
-    <div className="step1-layout">
-
-      {/* Left: form */}
-      <div className="step1-form">
-        <div className="wizard-section legal-section">
-          <p className="wizard-section-title">Identity</p>
-          <p className="wizard-section-desc">Required for EU sanctions screening.</p>
-          <div className="form-grid">
-            <div className="form-field">
-              <div className="form-label-row">
-                <label className="form-label">First name</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.firstName}>Sanctions screening</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                value={form.firstName}
-                onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-                placeholder="e.g. Jon"
-              />
-            </div>
-            <div className="form-field">
-              <div className="form-label-row">
-                <label className="form-label">Last name</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.lastName}>Sanctions screening</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                value={form.lastName}
-                onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-                placeholder="e.g. Doe"
-              />
-            </div>
-            <div className="form-field full">
-              <div className="form-label-row">
-                <label className="form-label">Date of birth</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.dateOfBirth}>Sanctions list match</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                type="date"
-                value={form.dateOfBirth}
-                onChange={(e) => setForm((f) => ({ ...f, dateOfBirth: e.target.value }))}
-              />
-            </div>
-            <div className="form-field full">
-              <div className="form-label-row">
-                <label className="form-label">Address</label>
-                <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.address}>Optional</span>
-              </div>
-              <input
-                className="form-input"
-                value={form.address}
-                onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-                placeholder="e.g. Strandvejen 100"
-              />
-            </div>
-            <div className="form-field">
-              <div className="form-label-row">
-                <label className="form-label">Postal code</label>
-                <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.postalCode}>Optional</span>
-              </div>
-              <input
-                className="form-input"
-                value={form.postalCode}
-                onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
-                placeholder="e.g. 2900"
-              />
-            </div>
-            <div className="form-field">
-              <div className="form-label-row">
-                <label className="form-label">Account country</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.accountCountry}>Regulatory scope</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                value={form.accountCountry}
-                onChange={(e) => setForm((f) => ({ ...f, accountCountry: e.target.value }))}
-                placeholder="e.g. Denmark"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="wizard-section legal-section">
-          <p className="wizard-section-title">Organisation</p>
-          <p className="wizard-section-desc">Required for EU export control verification.</p>
-          <div className="form-grid">
-            <div className="form-field full">
-              <div className="form-label-row">
-                <label className="form-label">Company name</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.company}>Export control check</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                value={form.company}
-                onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-                placeholder="e.g. Imaginary Shipping A/S"
-              />
-            </div>
-            <div className="form-field full">
-              <div className="form-label-row">
-                <label className="form-label">Location / country</label>
-                <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.location}>Export control check</span>
-              </div>
-              <input
-                className="form-input legal-input"
-                value={form.location}
-                onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-                placeholder="e.g. Denmark"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="wizard-actions">
-          <button className="btn btn-primary" onClick={onNext} disabled={!valid}>
-            Continue to access and licenses →
-          </button>
-        </div>
-      </div>
-
-      {/* Right: info box */}
-      <div className="step1-info">
-        <div className="legal-info-box">
-          <div className="legal-info-header">
-            <span className="legal-info-icon">i</span>
-            Why is this information required?
-          </div>
-          <div className="legal-info-body">
-            <p>
-              Everllence is required by EU law to ask for certain information.
-              For user creation and management, Everllence needs additional
-              information about the user who will use the platform.
-            </p>
-            <div className="legal-info-block">
-              <div className="legal-info-block-label">Sanctions screening</div>
-              <p>
-                The name and date of birth are used to check against the
-                official EU sanctions list, to comply with Article 215 TFEU of
-                the EU-EC Treaty.
-              </p>
-            </div>
-            <div className="legal-info-block">
-              <div className="legal-info-block-label">Export control</div>
-              <p>
-                Certain products are prohibited from being exported. Your
-                company name and location are used to check against the EU
-                export control list (EU Dual-Use Regulation 2021/821).
-              </p>
-            </div>
-            <div className="legal-info-block">
-              <div className="legal-info-block-label">Organisational access</div>
-              <p>
-                Organisational data is used to set up the user. The permissions
-                given depend on your organisation's licenses and the user's
-                department and role.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  );
-}
-
-/* ── Step 2: Organisational requirements ──────────────────────────────── */
-
-function Step2({
+function StepForm({
   form,
   setForm,
   selectedLicences,
@@ -454,7 +251,6 @@ function Step2({
   toggleVessel,
   toggleFleet,
   onNext,
-  onBack,
   valid,
 }: {
   form: FormState;
@@ -464,13 +260,13 @@ function Step2({
   toggleVessel: (id: string) => void;
   toggleFleet: (fleet: Fleet) => void;
   onNext: () => void;
-  onBack: () => void;
   valid: boolean;
 }) {
   return (
     <>
       {/* Account type — readonly */}
       <div className="account-type-bar">
+
         <span className="account-type-label">Account type</span>
         <span className="account-type-badge">Employee</span>
         <span className="account-type-note">
@@ -478,13 +274,87 @@ function Step2({
         </span>
       </div>
 
-      {/* Email */}
-      <div className="wizard-section org-section">
-        <p className="wizard-section-title">Contact</p>
-        <p className="wizard-section-desc">
-          Used to send the account invitation and for platform login.
-        </p>
+      <div className="step1-layout">
+
+        {/* Left: all form sections */}
+        <div className="step1-form">
+
+      <div className="wizard-section legal-section">
+        <p className="wizard-section-title">Identity</p>
+        <p className="wizard-section-desc">Required for EU sanctions screening.</p>
         <div className="form-grid">
+          <div className="form-field">
+            <div className="form-label-row">
+              <label className="form-label">First name</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.firstName}>Sanctions screening</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              value={form.firstName}
+              onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
+              placeholder="e.g. Jon"
+            />
+          </div>
+          <div className="form-field">
+            <div className="form-label-row">
+              <label className="form-label">Last name</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.lastName}>Sanctions screening</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              value={form.lastName}
+              onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
+              placeholder="e.g. Doe"
+            />
+          </div>
+          <div className="form-field full">
+            <div className="form-label-row">
+              <label className="form-label">Date of birth</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.dateOfBirth}>Sanctions list match</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              type="date"
+              value={form.dateOfBirth}
+              onChange={(e) => setForm((f) => ({ ...f, dateOfBirth: e.target.value }))}
+            />
+          </div>
+          <div className="form-field full">
+            <div className="form-label-row">
+              <label className="form-label">Address</label>
+              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.address}>Optional</span>
+            </div>
+            <input
+              className="form-input"
+              value={form.address}
+              onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+              placeholder="e.g. Strandvejen 100"
+            />
+          </div>
+          <div className="form-field">
+            <div className="form-label-row">
+              <label className="form-label">Postal code</label>
+              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.postalCode}>Optional</span>
+            </div>
+            <input
+              className="form-input"
+              value={form.postalCode}
+              onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
+              placeholder="e.g. 2900"
+            />
+          </div>
+          <div className="form-field">
+            <div className="form-label-row">
+              <label className="form-label">Account country</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.accountCountry}>Regulatory scope</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              value={form.accountCountry}
+              onChange={(e) => setForm((f) => ({ ...f, accountCountry: e.target.value }))}
+              placeholder="e.g. Denmark"
+            />
+          </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Email</label>
@@ -514,13 +384,34 @@ function Step2({
         </div>
       </div>
 
-      {/* User details */}
-      <div className="wizard-section org-section">
-        <p className="wizard-section-title">User details</p>
-        <p className="wizard-section-desc">
-          Department and role determine which licences and access scopes apply to this user.
-        </p>
+      <div className="wizard-section legal-section">
+        <p className="wizard-section-title">Organisation</p>
+        <p className="wizard-section-desc">Required for EU export control verification and internal access management.</p>
         <div className="form-grid">
+          <div className="form-field full">
+            <div className="form-label-row">
+              <label className="form-label">Company name</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.company}>Export control check</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              value={form.company}
+              onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
+              placeholder="e.g. Imaginary Shipping A/S"
+            />
+          </div>
+          <div className="form-field full">
+            <div className="form-label-row">
+              <label className="form-label">Location / country</label>
+              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.location}>Export control check</span>
+            </div>
+            <input
+              className="form-input legal-input"
+              value={form.location}
+              onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+              placeholder="e.g. Denmark"
+            />
+          </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Department</label>
@@ -560,7 +451,6 @@ function Step2({
         </div>
       </div>
 
-      {/* Product licences */}
       <div className="wizard-section org-section">
         <p className="wizard-section-title">Product licences</p>
         <p className="wizard-section-desc">
@@ -579,7 +469,6 @@ function Step2({
         </div>
       </div>
 
-      {/* Fleet / vessel assignment */}
       <div className="wizard-section org-section">
         <p className="wizard-section-title">Fleet & vessel access</p>
         <p className="wizard-section-desc">
@@ -613,7 +502,6 @@ function Step2({
                     {allSelected ? 'Deselect fleet' : 'Select fleet'}
                   </button>
                 </div>
-
                 <div className="vessel-list">
                   {fleet.vessels.map((vessel) => {
                     const selected = form.assignedVesselIds.includes(vessel.id);
@@ -641,19 +529,69 @@ function Step2({
         </div>
       </div>
 
-      <div className="wizard-actions">
-        <button className="btn btn-secondary" onClick={onBack}>← Back</button>
-        <button className="btn btn-primary" onClick={onNext} disabled={!valid}>
-          Run sanctions check →
-        </button>
-      </div>
+        <div className="wizard-actions">
+          <button className="btn btn-primary" onClick={onNext} disabled={!valid}>
+            Run sanctions check →
+          </button>
+        </div>
+
+        </div>{/* end step1-form */}
+
+        {/* Right: yellow info box */}
+        <div className="step1-info">
+          <div className="legal-info-box">
+            <div className="legal-info-header">
+              <span className="legal-info-icon">i</span>
+              Why is this information required?
+            </div>
+            <div className="legal-info-body">
+              <p>
+                Everllence is required by EU law to ask for certain information.
+                For user creation and management, Everllence needs additional
+                information about the user who will use the platform.
+              </p>
+              <div className="legal-info-block">
+                <div className="legal-info-block-label">Sanctions screening</div>
+                <p>
+                  The name and date of birth are used to check against the
+                  official EU sanctions list, to comply with Article 215 TFEU of
+                  the EU-EC Treaty.
+                </p>
+              </div>
+              <div className="legal-info-block">
+                <div className="legal-info-block-label">Export control</div>
+                <p>
+                  Certain products are prohibited from being exported. Your
+                  company name and location are used to check against the EU
+                  export control list (EU Dual-Use Regulation 2021/821).
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="org-info-box">
+            <div className="org-info-header">
+              <span className="org-info-icon">i</span>
+              Organisational access
+            </div>
+            <div className="org-info-body">
+              <p>
+                Organisational data is used to set up the user. The permissions
+                given depend on your organisation's licenses and the user's
+                department and role.
+              </p>
+            </div>
+          </div>
+        </div>{/* end step1-info */}
+
+      </div>{/* end step1-layout */}
     </>
   );
 }
 
-/* ── Step 3: Sanctions check ──────────────────────────────────────────── */
+/* ── Final check step ─────────────────────────────────────────────────── */
 
-function Step3({
+function StepFinalCheck({
   form,
   selectedLicences,
   assignedVessels,
@@ -849,7 +787,6 @@ function LicenceBadge({
 }) {
   const provenance = licence.provenance;
   const locked = licence.id === 'lic-primeserv';
-  // Primeserv is always blue regardless of provenance kind
   const colourClass = locked ? 'organisational' : provenance.kind;
   const source =
     provenance.kind === 'organisational'
