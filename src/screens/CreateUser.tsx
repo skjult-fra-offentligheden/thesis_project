@@ -552,7 +552,7 @@ function StepForm({
             </div>
             <div className="legal-info-body">
               <p>
-                Everllence is required by EU law to ask for certain information.
+                Everllence is required by EU and International law to ask for certain information.
                 For user creation and management, Everllence needs additional
                 information about the user who will use the platform.
               </p>
