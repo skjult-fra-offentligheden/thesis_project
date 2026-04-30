@@ -36,6 +36,8 @@ const FIELD_TOOLTIPS = {
     'Optional: phone number can be used for account recovery or support contact purposes.',
 };
 
+type FieldKey = keyof typeof FIELD_TOOLTIPS;
+
 const LICENCE_TOOLTIPS: Record<string, string> = {
   'lic-primeserv':
     'PrimeServ is Everllence\u2019s core product, providing access to vessel data, dashboards, and alerts. All users must have this licence.',
@@ -268,6 +270,11 @@ function StepForm({
 }) {
   const lbl = (yellowText: string) => abVariant === 'b' ? 'Legal requirement' : yellowText;
   const org = (blueText: string)   => abVariant === 'b' ? 'Everllence requirement' : blueText;
+  const [focusedField, setFocusedField] = useState<FieldKey | null>(null);
+  const focusProps = (key: FieldKey) => ({
+    onFocus: () => setFocusedField(key),
+    onBlur: () => setFocusedField((curr) => (curr === key ? null : curr)),
+  });
   return (
     <>
       {/* Account type — readonly */}
@@ -292,79 +299,85 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">First name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.firstName}>{lbl('Sanctions screening')}</span>
+              <span className="field-why-badge">{lbl('Sanctions screening')}</span>
             </div>
             <input
               className="form-input legal-input"
               value={form.firstName}
               onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
               placeholder="e.g. Jon"
+              {...focusProps('firstName')}
             />
           </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Last name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.lastName}>{lbl('Sanctions screening')}</span>
+              <span className="field-why-badge">{lbl('Sanctions screening')}</span>
             </div>
             <input
               className="form-input legal-input"
               value={form.lastName}
               onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
               placeholder="e.g. Doe"
+              {...focusProps('lastName')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Date of birth</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.dateOfBirth}>{lbl('Sanctions list match')}</span>
+              <span className="field-why-badge">{lbl('Sanctions list match')}</span>
             </div>
             <input
               className="form-input legal-input"
               type="date"
               value={form.dateOfBirth}
               onChange={(e) => setForm((f) => ({ ...f, dateOfBirth: e.target.value }))}
+              {...focusProps('dateOfBirth')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Address</label>
-              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.address}>Optional</span>
+              <span className="field-why-badge optional">Optional</span>
             </div>
             <input
               className="form-input"
               value={form.address}
               onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
               placeholder="e.g. Strandvejen 100"
+              {...focusProps('address')}
             />
           </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Postal code</label>
-              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.postalCode}>Optional</span>
+              <span className="field-why-badge optional">Optional</span>
             </div>
             <input
               className="form-input"
               value={form.postalCode}
               onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
               placeholder="e.g. 2900"
+              {...focusProps('postalCode')}
             />
           </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Account country</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.accountCountry}>{lbl('Regulatory scope')}</span>
+              <span className="field-why-badge">{lbl('Regulatory scope')}</span>
             </div>
             <input
               className="form-input legal-input"
               value={form.accountCountry}
               onChange={(e) => setForm((f) => ({ ...f, accountCountry: e.target.value }))}
               placeholder="e.g. Denmark"
+              {...focusProps('accountCountry')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Email</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.email}>{org('Account setup')}</span>
+              <span className="field-why-badge org-badge">{org('Account setup')}</span>
             </div>
             <input
               className="form-input org-input"
@@ -372,12 +385,13 @@ function StepForm({
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               placeholder="e.g. jon.doe@company.com"
+              {...focusProps('email')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Phone number</label>
-              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.phone}>Optional</span>
+              <span className="field-why-badge optional">Optional</span>
             </div>
             <input
               className="form-input"
@@ -385,6 +399,7 @@ function StepForm({
               value={form.phone}
               onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
               placeholder="e.g. +45 12 34 56 78"
+              {...focusProps('phone')}
             />
           </div>
         </div>
@@ -397,61 +412,66 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Company name</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.company}>{lbl('Export control check')}</span>
+              <span className="field-why-badge">{lbl('Export control check')}</span>
             </div>
             <input
               className="form-input legal-input"
               value={form.company}
               onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
               placeholder="e.g. Imaginary Shipping A/S"
+              {...focusProps('company')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Location / country</label>
-              <span className="field-why-badge" data-tooltip={FIELD_TOOLTIPS.location}>{lbl('Export control check')}</span>
+              <span className="field-why-badge">{lbl('Export control check')}</span>
             </div>
             <input
               className="form-input legal-input"
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
               placeholder="e.g. Denmark"
+              {...focusProps('location')}
             />
           </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Department</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.department}>{org('Org. setup')}</span>
+              <span className="field-why-badge org-badge">{org('Org. setup')}</span>
             </div>
             <input
               className="form-input org-input"
               value={form.department}
               onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
               placeholder="e.g. Engineering"
+              {...focusProps('department')}
             />
           </div>
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Employee role</label>
-              <span className="field-why-badge org-badge" data-tooltip={FIELD_TOOLTIPS.employeeRole}>{org('Org. setup')}</span>
+              <span className="field-why-badge org-badge">{org('Org. setup')}</span>
             </div>
             <input
               className="form-input org-input"
               value={form.employeeRole}
               onChange={(e) => setForm((f) => ({ ...f, employeeRole: e.target.value }))}
               placeholder="e.g. Marine Engineer"
+              {...focusProps('employeeRole')}
             />
           </div>
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Account expiry</label>
-              <span className="field-why-badge optional" data-tooltip={FIELD_TOOLTIPS.expiryDate}>Optional</span>
+              <span className="field-why-badge optional">Optional</span>
             </div>
             <input
               className="form-input"
               type="date"
               value={form.expiryDate}
               onChange={(e) => setForm((f) => ({ ...f, expiryDate: e.target.value }))}
+              {...focusProps('expiryDate')}
             />
           </div>
         </div>
@@ -588,6 +608,18 @@ function StepForm({
               </p>
             </div>
           </div>
+
+          {focusedField !== null && (
+            <div className="field-info-box">
+              <div className="field-info-header">
+                <span className="field-info-icon">i</span>
+                Why this field?
+              </div>
+              <div className="field-info-body">
+                <p>{FIELD_TOOLTIPS[focusedField]}</p>
+              </div>
+            </div>
+          )}
         </div>{/* end step1-info */}
 
       </div>{/* end step1-layout */}
