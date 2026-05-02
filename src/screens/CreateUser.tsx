@@ -38,6 +38,28 @@ const FIELD_TOOLTIPS = {
 
 type FieldKey = keyof typeof FIELD_TOOLTIPS;
 
+// ── Which info box each field's tooltip appears in ───────────────────────
+// Match this to the badge colour next to the field's label:
+//   'yellow' = legal/yellow badge   → text appears in the yellow info box
+//   'blue'   = org-badge (blue)     → text appears in the blue info box
+//   'white'  = optional (white)     → text pops up in a new white box
+const FIELD_BADGE: Record<FieldKey, 'yellow' | 'blue' | 'white'> = {
+  firstName: 'yellow',
+  lastName: 'yellow',
+  dateOfBirth: 'yellow',
+  accountCountry: 'yellow',
+  company: 'yellow',
+  location: 'yellow',
+  email: 'blue',
+  department: 'blue',
+  employeeRole: 'blue',
+  address: 'white',
+  postalCode: 'white',
+  phone: 'white',
+  expiryDate: 'white',
+};
+// ─────────────────────────────────────────────────────────────────────────
+
 const LICENCE_TOOLTIPS: Record<string, string> = {
   'lic-primeserv':
     'PrimeServ is Everllence\u2019s core product, providing access to vessel data, dashboards, and alerts. All users must have this licence.',
@@ -275,6 +297,7 @@ function StepForm({
     onFocus: () => setFocusedField(key),
     onBlur: () => setFocusedField((curr) => (curr === key ? null : curr)),
   });
+  const focusedBadge = focusedField !== null ? FIELD_BADGE[focusedField] : null;
   return (
     <>
       {/* Account type — readonly */}
@@ -571,27 +594,33 @@ function StepForm({
               Why is this information required?
             </div>
             <div className="legal-info-body">
-              <p>
-                Everllence is required by EU and International law to ask for certain information.
-                For user creation and management, Everllence needs additional
-                information about the user who will use the platform.
-              </p>
-              <div className="legal-info-block">
-                <div className="legal-info-block-label">Sanctions screening</div>
-                <p>
-                  The name and date of birth are used to check against the
-                  official EU sanctions list, to comply with Article 215 TFEU of
-                  the EU-EC Treaty.
-                </p>
-              </div>
-              <div className="legal-info-block">
-                <div className="legal-info-block-label">Export control</div>
-                <p>
-                  Certain products are prohibited from being exported. Your
-                  company name and location are used to check against the EU
-                  export control list (EU Dual-Use Regulation 2021/821).
-                </p>
-              </div>
+              {focusedBadge === 'yellow' ? (
+                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+              ) : (
+                <>
+                  <p>
+                    Everllence is required by EU and International law to ask for certain information.
+                    For user creation and management, Everllence needs additional
+                    information about the user who will use the platform.
+                  </p>
+                  <div className="legal-info-block">
+                    <div className="legal-info-block-label">Sanctions screening</div>
+                    <p>
+                      The name and date of birth are used to check against the
+                      official EU sanctions list, to comply with Article 215 TFEU of
+                      the EU-EC Treaty.
+                    </p>
+                  </div>
+                  <div className="legal-info-block">
+                    <div className="legal-info-block-label">Export control</div>
+                    <p>
+                      Certain products are prohibited from being exported. Your
+                      company name and location are used to check against the EU
+                      export control list (EU Dual-Use Regulation 2021/821).
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -601,22 +630,26 @@ function StepForm({
               Organisational access
             </div>
             <div className="org-info-body">
-              <p>
-                Organisational data is used to set up the user. The permissions
-                given depend on your organisation's licenses and the user's
-                department and role.
-              </p>
+              {focusedBadge === 'blue' ? (
+                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+              ) : (
+                <p>
+                  Organisational data is used to set up the user. The permissions
+                  given depend on your organisation's licenses and the user's
+                  department and role.
+                </p>
+              )}
             </div>
           </div>
 
-          {focusedField !== null && (
+          {focusedBadge === 'white' && (
             <div className="field-info-box">
               <div className="field-info-header">
                 <span className="field-info-icon">i</span>
                 Why this field?
               </div>
               <div className="field-info-body">
-                <p>{FIELD_TOOLTIPS[focusedField]}</p>
+                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
               </div>
             </div>
           )}
