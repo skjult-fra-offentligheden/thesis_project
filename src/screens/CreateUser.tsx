@@ -664,7 +664,7 @@ function StepForm({
               </div>
               {focusedBadge === 'yellow' && (
                 <div className="legal-info-block field-tooltip-block">
-                  <div className="legal-info-block-label">Legal requirement — {FIELD_LABEL[focusedField!]}</div>
+                  <div className="legal-info-block-label">Legal requirement:{FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
@@ -684,7 +684,7 @@ function StepForm({
               </p>
               {focusedBadge === 'blue' && (
                 <div className="field-tooltip-block">
-                  <div className="field-tooltip-label">Everllence requirement — {FIELD_LABEL[focusedField!]}</div>
+                  <div className="field-tooltip-label">Everllence requirement:{FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
