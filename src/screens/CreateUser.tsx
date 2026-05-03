@@ -638,9 +638,7 @@ function StepForm({
           <div className="legal-info-box">
             <div className="legal-info-header">
               <span className="legal-info-icon">i</span>
-              {focusedBadge === 'yellow'
-                ? <>Legal requirement — <em>{FIELD_LABEL[focusedField!]}</em></>
-                : 'Why is this information required?'}
+              Why is this information required?
             </div>
             <div className="legal-info-body">
               <p>
@@ -666,7 +664,7 @@ function StepForm({
               </div>
               {focusedBadge === 'yellow' && (
                 <div className="legal-info-block field-tooltip-block">
-                  <div className="legal-info-block-label">{FIELD_LABEL[focusedField!]}</div>
+                  <div className="legal-info-block-label">Legal requirement — {FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
@@ -676,9 +674,7 @@ function StepForm({
           <div className="org-info-box">
             <div className="org-info-header">
               <span className="org-info-icon">i</span>
-              {focusedBadge === 'blue'
-                ? <>Everllence requirement — <em>{FIELD_LABEL[focusedField!]}</em></>
-                : 'Organisational access'}
+              Organisational access
             </div>
             <div className="org-info-body">
               <p>
@@ -688,7 +684,7 @@ function StepForm({
               </p>
               {focusedBadge === 'blue' && (
                 <div className="field-tooltip-block">
-                  <div className="field-tooltip-label">{FIELD_LABEL[focusedField!]}</div>
+                  <div className="field-tooltip-label">Everllence requirement — {FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
