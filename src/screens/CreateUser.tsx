@@ -6,7 +6,6 @@ import { requirementsCatalogue } from '../data/requirements';
 import type { Fleet } from '../data/fleets';
 import type { FunctionGrant } from '../types/grants';
 import type { User } from '../types/users';
-import type { ABVariant } from '../App';
 
 const req = (id: string) => {
   const r = requirementsCatalogue.find((x) => x.id === id);
@@ -131,7 +130,7 @@ function makeDefaultExpiry() {
   return d.toISOString().split('T')[0];
 }
 
-export function CreateUser({ abVariant, onUserCreated }: { abVariant: ABVariant; onUserCreated: (user: User) => void }) {
+export function CreateUser({ onUserCreated }: { onUserCreated: (user: User) => void }) {
   const [step, setStep] = useState<WizardStep>(1);
   const [form, setForm] = useState<FormState>({
     firstName: '',
@@ -279,7 +278,6 @@ export function CreateUser({ abVariant, onUserCreated }: { abVariant: ABVariant;
             toggleFleet={toggleFleet}
             onNext={runSanctionsCheck}
             valid={formValid}
-            abVariant={abVariant}
           />
         )}
         {step === 2 && (
@@ -331,7 +329,6 @@ function StepForm({
   toggleFleet,
   onNext,
   valid,
-  abVariant,
 }: {
   form: FormState;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
@@ -341,10 +338,7 @@ function StepForm({
   toggleFleet: (fleet: Fleet) => void;
   onNext: () => void;
   valid: boolean;
-  abVariant: ABVariant;
 }) {
-  const lbl = (yellowText: string) => abVariant === 'b' ? 'Legal requirement' : yellowText;
-  const org = (blueText: string)   => abVariant === 'b' ? 'Everllence requirement' : blueText;
   const [focusedField, setFocusedField] = useState<FieldKey | null>(null);
   const focusProps = (key: FieldKey) => ({
     onFocus: () => setFocusedField(key),
@@ -375,7 +369,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">First name</label>
-              <span className="field-why-badge">{lbl('Sanctions screening')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -388,7 +382,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Last name</label>
-              <span className="field-why-badge">{lbl('Sanctions screening')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -401,7 +395,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Date of birth</label>
-              <span className="field-why-badge">{lbl('Sanctions list match')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -440,7 +434,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Account country</label>
-              <span className="field-why-badge">{lbl('Regulatory scope')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -453,7 +447,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Email</label>
-              <span className="field-why-badge org-badge">{org('Account setup')}</span>
+              <span className="field-why-badge org-badge">{'Everllence requirement'}</span>
             </div>
             <input
               className="form-input org-input"
@@ -488,7 +482,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Company name</label>
-              <span className="field-why-badge">{lbl('Export control check')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -501,7 +495,7 @@ function StepForm({
           <div className="form-field full">
             <div className="form-label-row">
               <label className="form-label">Location / country</label>
-              <span className="field-why-badge">{lbl('Export control check')}</span>
+              <span className="field-why-badge">{'Legal requirement'}</span>
             </div>
             <input
               className="form-input legal-input"
@@ -514,7 +508,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Department</label>
-              <span className="field-why-badge org-badge">{org('Org. setup')}</span>
+              <span className="field-why-badge org-badge">{'Everllence requirement'}</span>
             </div>
             <input
               className="form-input org-input"
@@ -527,7 +521,7 @@ function StepForm({
           <div className="form-field">
             <div className="form-label-row">
               <label className="form-label">Employee role</label>
-              <span className="field-why-badge org-badge">{org('Org. setup')}</span>
+              <span className="field-why-badge org-badge">{'Everllence requirement'}</span>
             </div>
             <input
               className="form-input org-input"

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { currentUser, customerOrg } from '../data/users';
 import { roles } from '../data/roles';
-import type { ABVariant } from '../App';
 
 type NavKey = 'dashboard' | 'create-user' | 'manage-team' | 'fleets' | 'settings';
 
@@ -9,12 +8,10 @@ type Props = {
   active: NavKey;
   onNavigate: (key: NavKey) => void;
   onLogout: () => void;
-  abVariant: ABVariant;
-  onToggleVariant: () => void;
   children: ReactNode;
 };
 
-export function Layout({ active, onNavigate, onLogout, abVariant, onToggleVariant, children }: Props) {
+export function Layout({ active, onNavigate, onLogout, children }: Props) {
   const role = roles.find((r) => r.id === currentUser.roleId)!;
 
   return (
@@ -54,25 +51,6 @@ export function Layout({ active, onNavigate, onLogout, abVariant, onToggleVarian
         <NavItem label="Fleets" disabled comingSoon />
         <NavItem label="Settings" disabled comingSoon />
         <div className="nav-spacer" />
-
-        {/* A/B variant toggle */}
-        <div className="nav-ab-wrap">
-          <span className="nav-ab-label">A/B</span>
-          <div className="nav-ab-toggle">
-            <button
-              className={`nav-ab-btn${abVariant === 'a' ? ' active' : ''}`}
-              onClick={() => abVariant !== 'a' && onToggleVariant()}
-            >
-              A
-            </button>
-            <button
-              className={`nav-ab-btn${abVariant === 'b' ? ' active' : ''}`}
-              onClick={() => abVariant !== 'b' && onToggleVariant()}
-            >
-              B
-            </button>
-          </div>
-        </div>
 
         <div className="nav-logout" onClick={onLogout}>
           <LogoutIcon />
