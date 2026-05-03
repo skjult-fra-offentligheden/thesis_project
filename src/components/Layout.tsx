@@ -48,7 +48,11 @@ export function Layout({ active, onNavigate, onLogout, children }: Props) {
           active={active === 'manage-team'}
           onClick={() => onNavigate('manage-team')}
         />
-        <NavItem label="Fleets" disabled comingSoon />
+        <NavItem
+          label="Fleets"
+          active={active === 'fleets'}
+          onClick={() => onNavigate('fleets')}
+        />
         <NavItem label="Settings" disabled comingSoon />
         <div className="nav-spacer" />
 
