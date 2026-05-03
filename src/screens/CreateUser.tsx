@@ -638,7 +638,9 @@ function StepForm({
           <div className="legal-info-box">
             <div className="legal-info-header">
               <span className="legal-info-icon">i</span>
-              Why is this information required?
+              {focusedBadge === 'yellow'
+                ? <>Legal requirement — <em>{FIELD_LABEL[focusedField!]}</em></>
+                : 'Why is this information required?'}
             </div>
             <div className="legal-info-body">
               <p>
@@ -674,7 +676,9 @@ function StepForm({
           <div className="org-info-box">
             <div className="org-info-header">
               <span className="org-info-icon">i</span>
-              Organisational access
+              {focusedBadge === 'blue'
+                ? <>Everllence requirement — <em>{FIELD_LABEL[focusedField!]}</em></>
+                : 'Organisational access'}
             </div>
             <div className="org-info-body">
               <p>
