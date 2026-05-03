@@ -594,32 +594,31 @@ function StepForm({
               Why is this information required?
             </div>
             <div className="legal-info-body">
-              {focusedBadge === 'yellow' ? (
-                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
-              ) : (
-                <>
-                  <p>
-                    Everllence is required by EU and International law to ask for certain information.
-                    For user creation and management, Everllence needs additional
-                    information about the user who will use the platform.
-                  </p>
-                  <div className="legal-info-block">
-                    <div className="legal-info-block-label">Sanctions screening</div>
-                    <p>
-                      The name and date of birth are used to check against the
-                      official EU sanctions list, to comply with Article 215 TFEU of
-                      the EU-EC Treaty.
-                    </p>
-                  </div>
-                  <div className="legal-info-block">
-                    <div className="legal-info-block-label">Export control</div>
-                    <p>
-                      Certain products are prohibited from being exported. Your
-                      company name and location are used to check against the EU
-                      export control list (EU Dual-Use Regulation 2021/821).
-                    </p>
-                  </div>
-                </>
+              <p>
+                Everllence is required by EU and International law to ask for certain information.
+                For user creation and management, Everllence needs additional
+                information about the user who will use the platform.
+              </p>
+              <div className="legal-info-block">
+                <div className="legal-info-block-label">Sanctions screening</div>
+                <p>
+                  The name and date of birth are used to check against the
+                  official EU sanctions list, to comply with Article 215 TFEU of
+                  the EU-EC Treaty.
+                </p>
+              </div>
+              <div className="legal-info-block">
+                <div className="legal-info-block-label">Export control</div>
+                <p>
+                  Certain products are prohibited from being exported. Your
+                  company name and location are used to check against the EU
+                  export control list (EU Dual-Use Regulation 2021/821).
+                </p>
+              </div>
+              {focusedBadge === 'yellow' && (
+                <div className="legal-info-block field-tooltip-block">
+                  <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+                </div>
               )}
             </div>
           </div>
@@ -630,14 +629,15 @@ function StepForm({
               Organisational access
             </div>
             <div className="org-info-body">
-              {focusedBadge === 'blue' ? (
-                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
-              ) : (
-                <p>
-                  Organisational data is used to set up the user. The permissions
-                  given depend on your organisation's licenses and the user's
-                  department and role.
-                </p>
+              <p>
+                Organisational data is used to set up the user. The permissions
+                given depend on your organisation's licenses and the user's
+                department and role.
+              </p>
+              {focusedBadge === 'blue' && (
+                <div className="field-tooltip-block">
+                  <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+                </div>
               )}
             </div>
           </div>

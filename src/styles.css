@@ -858,6 +858,19 @@ body { margin: 0; }
   color: var(--text-muted);
 }
 
+/* Field tooltip appended below box content on input focus */
+.field-tooltip-block {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.field-tooltip-block p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 /* White popup info box — appears under blue box for optional (white-badge) fields */
 .field-info-box {
   background: #ffffff;
