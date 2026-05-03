@@ -2,9 +2,17 @@ import { useState, useRef } from 'react';
 import { productLicences } from '../data/grants';
 import { fleets } from '../data/fleets';
 import { customerOrg } from '../data/users';
+import { requirementsCatalogue } from '../data/requirements';
 import type { Fleet } from '../data/fleets';
 import type { FunctionGrant } from '../types/grants';
+import type { User } from '../types/users';
 import type { ABVariant } from '../App';
+
+const req = (id: string) => {
+  const r = requirementsCatalogue.find((x) => x.id === id);
+  if (!r) throw new Error(`Unknown requirement: ${id}`);
+  return r;
+};
 
 // ── Edit all badge tooltip text here ─────────────────────────────────────
 const FIELD_TOOLTIPS = {
@@ -123,7 +131,7 @@ function makeDefaultExpiry() {
   return d.toISOString().split('T')[0];
 }
 
-export function CreateUser({ abVariant }: { abVariant: ABVariant }) {
+export function CreateUser({ abVariant, onUserCreated }: { abVariant: ABVariant; onUserCreated: (user: User) => void }) {
   const [step, setStep] = useState<WizardStep>(1);
   const [form, setForm] = useState<FormState>({
     firstName: '',
@@ -180,7 +188,35 @@ export function CreateUser({ abVariant }: { abVariant: ABVariant }) {
       form.lastName.trim().toLowerCase() === SANCTIONS_FAIL_TRIGGER.lastName.toLowerCase();
     setStep(2);
     setSanctionsStatus('checking');
-    setTimeout(() => setSanctionsStatus(willFail ? 'failed' : 'passed'), 10000);
+    setTimeout(() => {
+      if (!willFail) {
+        const allVessels = fleets.flatMap((f) => f.vessels);
+        const newUser: User = {
+          id: `usr-${form.firstName.toLowerCase().replace(/\s+/g, '-')}-${form.lastName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
+          name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+          email: form.email,
+          roleId: 'employee',
+          department: form.department || undefined,
+          employeeRole: form.employeeRole || undefined,
+          expiryDate: form.expiryDate || undefined,
+          grants: [
+            ...productLicences.filter((l) => form.selectedLicenceIds.includes(l.id)),
+            ...form.assignedVesselIds.map((vid) => {
+              const vessel = allVessels.find((v) => v.id === vid)!;
+              return {
+                kind: 'data' as const,
+                id: `grant-vessel-${vid}-${Date.now()}`,
+                label: vessel.name,
+                scope: { type: 'vessel' as const, targetId: vid },
+                provenance: req('req-customer-fleet-scoping'),
+              };
+            }),
+          ],
+        };
+        onUserCreated(newUser);
+      }
+      setSanctionsStatus(willFail ? 'failed' : 'passed');
+    }, 10000);
   }
 
   function resetWizard() {

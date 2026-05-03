@@ -19,6 +19,10 @@ export function App() {
     setUsers((prev) => prev.filter((u) => u.id !== id));
   }
 
+  function addUser(user: User) {
+    setUsers((prev) => [...prev, user]);
+  }
+
   if (!loggedIn) {
     return <Login onLogin={() => setLoggedIn(true)} />;
   }
@@ -32,7 +36,7 @@ export function App() {
       onToggleVariant={() => setAbVariant((v) => (v === 'a' ? 'b' : 'a'))}
     >
       {active === 'dashboard' && <Dashboard />}
-      {active === 'create-user' && <CreateUser abVariant={abVariant} />}
+      {active === 'create-user' && <CreateUser abVariant={abVariant} onUserCreated={addUser} />}
       {active === 'manage-team' && (
         <ManageTeam users={users} onDelete={deleteUser} />
       )}
