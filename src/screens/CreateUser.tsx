@@ -58,6 +58,23 @@ const FIELD_BADGE: Record<FieldKey, 'yellow' | 'blue' | 'white'> = {
   phone: 'white',
   expiryDate: 'white',
 };
+
+// ── Title shown above the tooltip text (variant A badge label) ────────────
+const FIELD_LABEL: Record<FieldKey, string> = {
+  firstName: 'Sanctions screening',
+  lastName: 'Sanctions screening',
+  dateOfBirth: 'Sanctions list match',
+  accountCountry: 'Regulatory scope',
+  company: 'Export control check',
+  location: 'Export control check',
+  email: 'Account setup',
+  department: 'Org. setup',
+  employeeRole: 'Org. setup',
+  address: 'Optional',
+  postalCode: 'Optional',
+  phone: 'Optional',
+  expiryDate: 'Optional',
+};
 // ─────────────────────────────────────────────────────────────────────────
 
 const LICENCE_TOOLTIPS: Record<string, string> = {
@@ -617,7 +634,8 @@ function StepForm({
               </div>
               {focusedBadge === 'yellow' && (
                 <div className="legal-info-block field-tooltip-block">
-                  <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+                  <div className="legal-info-block-label">{FIELD_LABEL[focusedField!]}</div>
+                  <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
             </div>
@@ -636,7 +654,8 @@ function StepForm({
               </p>
               {focusedBadge === 'blue' && (
                 <div className="field-tooltip-block">
-                  <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+                  <div className="field-tooltip-label">{FIELD_LABEL[focusedField!]}</div>
+                  <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
             </div>
@@ -646,10 +665,10 @@ function StepForm({
             <div className="field-info-box">
               <div className="field-info-header">
                 <span className="field-info-icon">i</span>
-                Why this field?
+                {FIELD_LABEL[focusedField!]}
               </div>
               <div className="field-info-body">
-                <p>{FIELD_TOOLTIPS[focusedField!]}</p>
+                <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
               </div>
             </div>
           )}
