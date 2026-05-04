@@ -665,9 +665,14 @@ function StepForm({
                   export control list (EU Dual-Use Regulation 2021/821).
                 </p>
               </div>
-              {focusedBadge === 'yellow' && (
+              {hoveredLicenceId !== null && productLicences.find((l) => l.id === hoveredLicenceId)?.provenance.kind === 'legal' ? (
                 <div className="legal-info-block field-tooltip-block">
-                  <div className="legal-info-block-label">Legal requirement:{FIELD_LABEL[focusedField!]}</div>
+                  <div className="legal-info-block-label">Legal requirement: {productLicences.find((l) => l.id === hoveredLicenceId)?.label}</div>
+                  <p><strong>{LICENCE_TOOLTIPS[hoveredLicenceId]}</strong></p>
+                </div>
+              ) : focusedBadge === 'yellow' && (
+                <div className="legal-info-block field-tooltip-block">
+                  <div className="legal-info-block-label">Legal requirement: {FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
@@ -685,7 +690,7 @@ function StepForm({
                 given depend on your organisation's licenses and the user's
                 department and role.
               </p>
-              {hoveredLicenceId !== null ? (
+              {hoveredLicenceId !== null && productLicences.find((l) => l.id === hoveredLicenceId)?.provenance.kind !== 'legal' ? (
                 <div className="field-tooltip-block">
                   <div className="field-tooltip-label">Everllence requirement: {productLicences.find((l) => l.id === hoveredLicenceId)?.label}</div>
                   <p><strong>{LICENCE_TOOLTIPS[hoveredLicenceId]}</strong></p>
