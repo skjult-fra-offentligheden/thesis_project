@@ -340,6 +340,7 @@ function StepForm({
   valid: boolean;
 }) {
   const [focusedField, setFocusedField] = useState<FieldKey | null>(null);
+  const [hoveredLicenceId, setHoveredLicenceId] = useState<string | null>(null);
   const focusProps = (key: FieldKey) => ({
     onFocus: () => setFocusedField(key),
     onBlur: () => setFocusedField((curr) => (curr === key ? null : curr)),
@@ -560,6 +561,8 @@ function StepForm({
               licence={lic}
               selected={form.selectedLicenceIds.includes(lic.id)}
               onToggle={() => toggleLicence(lic.id)}
+              onMouseEnter={() => setHoveredLicenceId(lic.id)}
+              onMouseLeave={() => setHoveredLicenceId(null)}
             />
           ))}
         </div>
@@ -682,9 +685,14 @@ function StepForm({
                 given depend on your organisation's licenses and the user's
                 department and role.
               </p>
-              {focusedBadge === 'blue' && (
+              {hoveredLicenceId !== null ? (
                 <div className="field-tooltip-block">
-                  <div className="field-tooltip-label">Everllence requirement:{FIELD_LABEL[focusedField!]}</div>
+                  <div className="field-tooltip-label">Everllence requirement: {productLicences.find((l) => l.id === hoveredLicenceId)?.label}</div>
+                  <p><strong>{LICENCE_TOOLTIPS[hoveredLicenceId]}</strong></p>
+                </div>
+              ) : focusedBadge === 'blue' && (
+                <div className="field-tooltip-block">
+                  <div className="field-tooltip-label">Everllence requirement: {FIELD_LABEL[focusedField!]}</div>
                   <p><strong>{FIELD_TOOLTIPS[focusedField!]}</strong></p>
                 </div>
               )}
@@ -900,10 +908,14 @@ function LicenceBadge({
   licence,
   selected,
   onToggle,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   licence: FunctionGrant;
   selected: boolean;
   onToggle: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }) {
   const provenance = licence.provenance;
   const locked = licence.id === 'lic-primeserv';
@@ -918,8 +930,9 @@ function LicenceBadge({
   return (
     <div
       className={`grant-badge ${colourClass}${selected ? ' selected' : ''}${locked ? ' locked' : ''}`}
-      data-tooltip={LICENCE_TOOLTIPS[licence.id] ?? ''}
       onClick={onToggle}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       role="checkbox"
       aria-checked={selected}
     >
