@@ -848,7 +848,7 @@ function StepFinalCheck({
               </div>
               <div className="wizard-actions" style={{ justifyContent: 'center', marginTop: 20 }}>
                 <button className="btn btn-secondary" onClick={onBack}>
-                  ← Review details
+                  ← Review user details
                 </button>
               </div>
               {outlookOpen && (
